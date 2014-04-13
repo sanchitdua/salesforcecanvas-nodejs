@@ -1,3 +1,4 @@
+/*
 var express = require('express');
 var path = require('path');
 var favicon = require('static-favicon');
@@ -17,8 +18,9 @@ app.set('view engine', 'jade');
 
 app.use(favicon());
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser());
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -58,6 +60,33 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+
+var server = app.listen(3000, function() {
+    console.log('Listening on port %d', server.address().port);
+});
+*/
+var express = require('express');
+var bodyParser = require('body-parser');
+var signed_request = require('./signed_request')
+var app = express();
+
+app.use(bodyParser());
+
+app.get('/hello.txt', function(req, res){
+  console.log(req);
+  res.send('Hello World');
+});
+
+app.post('/canvas', function(req, res){
+  //console.log(req);
+
+  secret = '9199412244496712486';
+  var verifier = new SignedRequest(secret, req.body.signed_request);
+  verifier.verified(); // whether or not the signed request verifies
+  verifier.data; // the data from the signed request
+  res.send(verifier.data);
+  res.send('Hello World');
+});
 
 var server = app.listen(3000, function() {
     console.log('Listening on port %d', server.address().port);
