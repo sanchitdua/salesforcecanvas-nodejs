@@ -82,7 +82,7 @@ app.post('/canvas', function(req, res){
 
   secret = '9199412244496712486';
   var verifier = new SignedRequest(secret, req.body.signed_request);
-  verifier.verified(); // whether or not the signed request verifies
+  verifier.verify(); // whether or not the signed request verifies
   verifier.data; // the data from the signed request
   res.send(verifier.data);
   res.send('Hello World');
